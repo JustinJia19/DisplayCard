@@ -1,14 +1,67 @@
-﻿Public Class Form1
+﻿Imports Newtonsoft.Json
+Imports System.IO
+
+Public Class Form1
     Private cards As New List(Of FlashCard)
     Private currentIndex As Integer = -1
+    Private showHiddenCards As Boolean = False ' 状态变量，默认为False表示显示未隐藏卡片
+    Private dataFilePath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FlashCardApp", "cards.json")
 
-    ' 加载一些示例卡片
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        AddSampleCards()
+        LoadCards() ' 加载卡片数据
+        If cards.Count = 0 Then
+            AddSampleCards() ' 如果没有加载到卡片，则添加示例卡片
+        End If
         btnNext.Enabled = False
         btnPrevious.Enabled = False
-        If cards.Count = 0 Then
-            lblStatus.Text = "没有卡片"
+        lblStatus.Text = "没有卡片"
+
+        ' 初始化按钮文字
+        btn_OverviewHiddenCard.Text = "查看隐藏卡片" ' 默认情况下显示隐藏卡片
+    End Sub
+
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        SaveCards() ' 保存卡片数据
+    End Sub
+
+    Private Function GetVisibleCards() As List(Of FlashCard)
+        Return cards.Where(Function(c) Not c.IsHidden).ToList()
+    End Function
+
+    Private Sub SaveCards()
+        ' 确保 dataFilePath 是一个变量，它包含了要保存的文件的完整路径
+        ' 注意：这里使用了 Path.Combine 来构建文件路径，以保证跨平台兼容性。
+        Dim directory2 As String = Path.GetDirectoryName(dataFilePath)
+
+        ' 检查目录是否存在，如果不存在，则创建它
+        If Not Directory.Exists(directory2) Then
+            Directory.CreateDirectory(directory2)
+        End If
+
+        ' 将 cards 集合序列化为 JSON 字符串
+        Dim json As String = JsonConvert.SerializeObject(cards, Formatting.Indented)
+
+        ' 使用 StreamWriter 将 JSON 字符串写入文件
+        Using writer As StreamWriter = New StreamWriter(dataFilePath, False, System.Text.Encoding.UTF8)
+            writer.Write(json)
+        End Using
+    End Sub
+
+
+    Private Sub LoadCards()
+        If File.Exists(dataFilePath) Then
+            Try
+                Using reader As StreamReader = New StreamReader(dataFilePath)
+                    Dim json As String = reader.ReadToEnd()
+                    cards = JsonConvert.DeserializeObject(Of List(Of FlashCard))(json)
+                    If cards Is Nothing Then
+                        cards = New List(Of FlashCard)
+                    End If
+                End Using
+            Catch ex As Exception
+                MessageBox.Show("加载卡片数据时发生错误: " & ex.Message)
+                cards = New List(Of FlashCard)()
+            End Try
         End If
     End Sub
 
@@ -19,32 +72,49 @@
         cards.Add(New FlashCard("指定筛选条件并执行某种计算的推导式", "squares= [x * x for x in numbers if x > 25]"))
     End Sub
 
-    ' 显示下一张卡片
     Private Sub BtnNext_Click(sender As Object, e As EventArgs) Handles btnNext.Click
-        If currentIndex < cards.Count - 1 Then
+        Dim filteredCards = If(showHiddenCards, cards.Where(Function(c) c.IsHidden).ToList(), GetVisibleCards())
+        If filteredCards.Count = 0 Then
+            MessageBox.Show("当前设置下没有符合条件的卡片。")
+            Return
+        End If
+
+        If currentIndex < filteredCards.Count - 1 Then
             currentIndex += 1
             ShowCurrentCard()
-        Else
+        ElseIf filteredCards.Count > 0 Then
             currentIndex = 0
             ShowCurrentCard()
         End If
     End Sub
 
-    ' 显示上一张卡片
     Private Sub BtnPrevious_Click(sender As Object, e As EventArgs) Handles btnPrevious.Click
+        Dim filteredCards = If(showHiddenCards, cards.Where(Function(c) c.IsHidden).ToList(), GetVisibleCards())
+        If filteredCards.Count = 0 Then
+            MessageBox.Show("当前设置下没有符合条件的卡片。")
+            Return
+        End If
+
         If currentIndex > 0 Then
             currentIndex -= 1
             ShowCurrentCard()
-        Else
+        ElseIf currentIndex = 0 AndAlso filteredCards.Count > 0 Then
             MessageBox.Show("已经是第一张卡片了。")
         End If
     End Sub
 
-    ' 显示当前卡片
     Private Sub ShowCurrentCard()
-        If cards.Count > 0 AndAlso currentIndex >= 0 AndAlso currentIndex < cards.Count Then
-            UpdateStatus()
-            Dim card As FlashCard = cards(currentIndex)
+        Dim filteredCards As List(Of FlashCard) = If(showHiddenCards, cards.Where(Function(c) c.IsHidden).ToList(), GetVisibleCards())
+
+        If filteredCards.Count = 0 Then
+            lblStatus.Text = "没有卡片"
+            MessageBox.Show("当前设置下没有符合条件的卡片。")
+            Return
+        End If
+
+        If currentIndex >= 0 AndAlso currentIndex < filteredCards.Count Then
+            UpdateStatus(filteredCards)
+            Dim card As FlashCard = filteredCards(currentIndex)
             Using cardForm As New CardForm(card)
                 cardForm.ShowDialog()
             End Using
@@ -53,16 +123,24 @@
         End If
     End Sub
 
-    ' 更新状态提示
-    Private Sub UpdateStatus()
-        If cards.Count > 0 AndAlso currentIndex >= 0 AndAlso currentIndex < cards.Count Then
-            lblStatus.Text = $"卡片 {currentIndex + 1}/{cards.Count}"
+    Private Sub UpdateVisibleCards()
+        currentIndex = Math.Max(0, Math.Min(currentIndex, GetVisibleCards().Count - 1))
+        ShowCurrentCard()
+        UpdateStatus()
+    End Sub
+
+    Private Sub UpdateStatus(Optional filteredCards As List(Of FlashCard) = Nothing)
+        If filteredCards Is Nothing Then
+            filteredCards = If(showHiddenCards, cards.Where(Function(c) c.IsHidden).ToList(), GetVisibleCards())
+        End If
+
+        If filteredCards.Count > 0 AndAlso currentIndex >= 0 AndAlso currentIndex < filteredCards.Count Then
+            lblStatus.Text = $"卡片 {currentIndex + 1}/{filteredCards.Count}"
         Else
             lblStatus.Text = "没有卡片"
         End If
     End Sub
 
-    ' 打开添加新卡片窗口
     Private Sub BtnAddCard_Click(sender As Object, e As EventArgs) Handles btnAddCard.Click
         Using addEditForm As New AddEditCardForm()
             If addEditForm.ShowDialog() = DialogResult.OK Then
@@ -74,16 +152,34 @@
         End Using
     End Sub
 
-    ' 开始浏览卡片
     Private Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
-        If cards.Count > 0 Then
+        Dim visibleCards = GetVisibleCards()
+        If visibleCards.Count > 0 Then
             btnStart.Hide()
             currentIndex = 0
             ShowCurrentCard()
             btnNext.Enabled = True
             btnPrevious.Enabled = True
         Else
-            MessageBox.Show("没有可用的卡片。")
+            MessageBox.Show("没有可见卡片可以开始浏览。")
         End If
+    End Sub
+
+    Private Sub btn_OverviewHiddenCard_Click(sender As Object, e As EventArgs) Handles btn_OverviewHiddenCard.Click
+        ' 切换显示隐藏或可见卡片
+        showHiddenCards = Not showHiddenCards
+
+        ' 更新按钮文字以反映新的状态
+        If showHiddenCards Then
+            btn_OverviewHiddenCard.Text = "查看未隐藏卡片"
+        Else
+            btn_OverviewHiddenCard.Text = "查看隐藏卡片"
+        End If
+
+        ' 重置索引以确保从头开始浏览
+        currentIndex = 0
+
+        ' 更新界面以反映新的卡片集
+        ShowCurrentCard()
     End Sub
 End Class

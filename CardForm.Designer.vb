@@ -29,6 +29,8 @@ Partial Class CardForm
         Me.btnRight = New System.Windows.Forms.Button()
         Me.btnWrong = New System.Windows.Forms.Button()
         Me.seqLabel = New System.Windows.Forms.Label()
+        Me.btn_Reuse = New System.Windows.Forms.Button()
+        Me.btn_Delete = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'lblCardContent
@@ -94,11 +96,32 @@ Partial Class CardForm
         Me.seqLabel.TabIndex = 6
         Me.seqLabel.Text = "Label1"
         '
+        'btn_Reuse
+        '
+        Me.btn_Reuse.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.btn_Reuse.Location = New System.Drawing.Point(335, 381)
+        Me.btn_Reuse.Name = "btn_Reuse"
+        Me.btn_Reuse.Size = New System.Drawing.Size(126, 34)
+        Me.btn_Reuse.TabIndex = 7
+        Me.btn_Reuse.Text = "取消隐藏"
+        Me.btn_Reuse.UseVisualStyleBackColor = True
+        '
+        'btn_Delete
+        '
+        Me.btn_Delete.Location = New System.Drawing.Point(344, 12)
+        Me.btn_Delete.Name = "btn_Delete"
+        Me.btn_Delete.Size = New System.Drawing.Size(126, 35)
+        Me.btn_Delete.TabIndex = 8
+        Me.btn_Delete.Text = "删除卡片"
+        Me.btn_Delete.UseVisualStyleBackColor = True
+        '
         'CardForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(539, 450)
+        Me.Controls.Add(Me.btn_Delete)
+        Me.Controls.Add(Me.btn_Reuse)
         Me.Controls.Add(Me.seqLabel)
         Me.Controls.Add(Me.btnWrong)
         Me.Controls.Add(Me.btnRight)
@@ -120,4 +143,6 @@ Partial Class CardForm
     Friend WithEvents btnRight As Button
     Friend WithEvents btnWrong As Button
     Friend WithEvents seqLabel As Label
+    Friend WithEvents btn_Reuse As Button
+    Friend WithEvents btn_Delete As Button
 End Class

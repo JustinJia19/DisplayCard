@@ -27,6 +27,7 @@ Partial Class Form1
         Me.btnAddCard = New System.Windows.Forms.Button()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.btnStart = New System.Windows.Forms.Button()
+        Me.btn_OverviewHiddenCard = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'btnNext
@@ -75,11 +76,21 @@ Partial Class Form1
         Me.btnStart.Text = "开始"
         Me.btnStart.UseVisualStyleBackColor = True
         '
+        'btn_OverviewHiddenCard
+        '
+        Me.btn_OverviewHiddenCard.Location = New System.Drawing.Point(590, 367)
+        Me.btn_OverviewHiddenCard.Name = "btn_OverviewHiddenCard"
+        Me.btn_OverviewHiddenCard.Size = New System.Drawing.Size(137, 43)
+        Me.btn_OverviewHiddenCard.TabIndex = 5
+        Me.btn_OverviewHiddenCard.Text = "查看已隐藏卡片"
+        Me.btn_OverviewHiddenCard.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.btn_OverviewHiddenCard)
         Me.Controls.Add(Me.btnStart)
         Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.btnAddCard)
@@ -97,4 +108,5 @@ Partial Class Form1
     Friend WithEvents btnAddCard As Button
     Friend WithEvents lblStatus As Label
     Friend WithEvents btnStart As Button
+    Friend WithEvents btn_OverviewHiddenCard As Button
 End Class
