@@ -7,6 +7,12 @@ Public Class Form1
     Private showHiddenCards As Boolean = False ' 状态变量，默认为False表示显示未隐藏卡片
     Private dataFilePath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FlashCardApp", "cards.json")
 
+    ' 确保窗体可以预览键盘事件
+    Public Sub New()
+        InitializeComponent()
+        Me.KeyPreview = True
+    End Sub
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadCards() ' 加载卡片数据
         If cards.Count = 0 Then
@@ -22,6 +28,16 @@ Public Class Form1
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         SaveCards() ' 保存卡片数据
+    End Sub
+
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        ' 检查是否按下了A键
+        If e.KeyCode = Keys.A Then
+            ' 触发 Click 事件
+            btnPrevious.PerformClick()
+        ElseIf e.KeyCode = Keys.d Then
+            btnNext.PerformClick()
+        End If
     End Sub
 
     Private Function GetVisibleCards() As List(Of FlashCard)
@@ -165,9 +181,9 @@ Public Class Form1
             If addEditForm.ShowDialog() = DialogResult.OK Then
                 Dim newCard As FlashCard = addEditForm.GetNewCard()
                 cards.Add(newCard)
-
+                MessageBox.Show("卡片添加成功！")
             End If
-            MessageBox.Show("卡片添加成功！")
+
         End Using
     End Sub
 
@@ -216,5 +232,25 @@ Public Class Form1
         Else
             MessageBox.Show("当前没有可用的卡片。")
         End If
+    End Sub
+
+    Private Sub ShowDueCards()
+        ' 获取所有应复习的卡片
+        Dim dueCards = cards.Where(Function(c) Not c.IsHidden AndAlso c.NextReviewDate <= DateTime.Now).ToList()
+
+        If dueCards.Count > 0 Then
+            ' 找到 memoryIndex 最小的卡片
+            Dim minMemoryIndex = dueCards.Min(Function(c) c.memoryIndex)
+            Dim nextCard = dueCards.FirstOrDefault(Function(c) c.memoryIndex = minMemoryIndex)
+
+            currentIndex = cards.IndexOf(nextCard)
+            ShowCurrentCard()
+        Else
+            MessageBox.Show("没有需要复习的卡片。")
+        End If
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btn_Review.Click
+        ShowDueCards()
     End Sub
 End Class

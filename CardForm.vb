@@ -3,11 +3,26 @@
 Public Class CardForm
     Private isFrontVisible As Boolean = True
     Private currentCard As FlashCard
-
+    ' 确保窗体可以预览键盘事件
+    Public Sub New()
+        InitializeComponent()
+        Me.KeyPreview = True
+    End Sub
     Public Sub New(card As FlashCard)
         InitializeComponent()
         currentCard = card
         UpdateDisplay()
+        Me.KeyPreview = True
+    End Sub
+
+    Private Sub CardForm_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        ' 检查是否按下了A键
+        If e.KeyCode = Keys.D Then
+            ' 触发 Click 事件
+            btnRight.PerformClick()
+        ElseIf e.KeyCode = Keys.a Then
+            btnWrong.PerformClick()
+        End If
     End Sub
 
     ' 更新显示内容
@@ -34,6 +49,7 @@ Public Class CardForm
     Private Sub btnRight_Click(sender As Object, e As EventArgs) Handles btnRight.Click
         currentCard.rightNum = currentCard.rightNum + 1
         currentCard.sequentNum = currentCard.sequentNum + 1
+        currentCard.memoryIndex += 1
         ' 检查连续正确次数是否达到3，如果达到则隐藏卡片
         If currentCard.sequentNum >= 3 Then
             currentCard.IsHidden = True
@@ -44,6 +60,7 @@ Public Class CardForm
     Private Sub btnWrong_Click(sender As Object, e As EventArgs) Handles btnWrong.Click
         currentCard.wrongNum = currentCard.wrongNum + 1
         currentCard.sequentNum = 0
+        currentCard.memoryIndex = 0
         Me.Close()
     End Sub
 
@@ -76,6 +93,8 @@ Public Class CardForm
         currentCard.rightNum = 0
         currentCard.wrongNum = 0
         currentCard.sequentNum = 0
+        currentCard.memoryIndex = 0
+        currentCard.IsHidden = False
         MessageBox.Show("卡片已重置。")
         UpdateDisplay()
     End Sub

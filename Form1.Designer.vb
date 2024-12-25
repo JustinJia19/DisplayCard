@@ -29,6 +29,7 @@ Partial Class Form1
         Me.btnStart = New System.Windows.Forms.Button()
         Me.btn_OverviewHiddenCard = New System.Windows.Forms.Button()
         Me.btn_Random = New System.Windows.Forms.Button()
+        Me.btn_Review = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'btnNext
@@ -95,11 +96,21 @@ Partial Class Form1
         Me.btn_Random.Text = "随机抽取"
         Me.btn_Random.UseVisualStyleBackColor = True
         '
+        'btn_Review
+        '
+        Me.btn_Review.Location = New System.Drawing.Point(219, 367)
+        Me.btn_Review.Name = "btn_Review"
+        Me.btn_Review.Size = New System.Drawing.Size(137, 43)
+        Me.btn_Review.TabIndex = 7
+        Me.btn_Review.Text = "复习"
+        Me.btn_Review.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.btn_Review)
         Me.Controls.Add(Me.btn_Random)
         Me.Controls.Add(Me.btn_OverviewHiddenCard)
         Me.Controls.Add(Me.btnStart)
@@ -121,4 +132,5 @@ Partial Class Form1
     Friend WithEvents btnStart As Button
     Friend WithEvents btn_OverviewHiddenCard As Button
     Friend WithEvents btn_Random As Button
+    Friend WithEvents btn_Review As Button
 End Class
