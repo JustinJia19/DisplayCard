@@ -56,6 +56,27 @@ Public Class CardForm
     End Sub
 
     Private Sub btn_Delete_Click(sender As Object, e As EventArgs) Handles btn_Delete.Click
+        ' 删除当前卡片
+        If currentCard IsNot Nothing Then
+            ' 通过事件或委托通知主窗体删除该卡片
+            OnCardDeleted(currentCard)
+            Me.Close()
+        End If
+    End Sub
 
+    ' 定义一个事件，用于通知主窗体有卡片被删除
+    Public Event CardDeleted(card As FlashCard)
+
+    ' 触发 CardDeleted 事件的方法
+    Protected Overridable Sub OnCardDeleted(card As FlashCard)
+        RaiseEvent CardDeleted(card)
+    End Sub
+
+    Private Sub btn_Renew_Click(sender As Object, e As EventArgs) Handles btn_Renew.Click
+        currentCard.rightNum = 0
+        currentCard.wrongNum = 0
+        currentCard.sequentNum = 0
+        MessageBox.Show("卡片已重置。")
+        UpdateDisplay()
     End Sub
 End Class

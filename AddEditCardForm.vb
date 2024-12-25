@@ -18,4 +18,5 @@
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
+
 End Class

@@ -31,12 +31,14 @@ Partial Class CardForm
         Me.seqLabel = New System.Windows.Forms.Label()
         Me.btn_Reuse = New System.Windows.Forms.Button()
         Me.btn_Delete = New System.Windows.Forms.Button()
+        Me.AnswerBox = New System.Windows.Forms.TextBox()
+        Me.btn_Renew = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'lblCardContent
         '
         Me.lblCardContent.AutoSize = True
-        Me.lblCardContent.Location = New System.Drawing.Point(113, 86)
+        Me.lblCardContent.Location = New System.Drawing.Point(48, 86)
         Me.lblCardContent.Name = "lblCardContent"
         Me.lblCardContent.Size = New System.Drawing.Size(55, 15)
         Me.lblCardContent.TabIndex = 0
@@ -108,18 +110,37 @@ Partial Class CardForm
         '
         'btn_Delete
         '
-        Me.btn_Delete.Location = New System.Drawing.Point(344, 12)
+        Me.btn_Delete.Location = New System.Drawing.Point(335, 21)
         Me.btn_Delete.Name = "btn_Delete"
         Me.btn_Delete.Size = New System.Drawing.Size(126, 35)
         Me.btn_Delete.TabIndex = 8
         Me.btn_Delete.Text = "删除卡片"
         Me.btn_Delete.UseVisualStyleBackColor = True
         '
+        'AnswerBox
+        '
+        Me.AnswerBox.Location = New System.Drawing.Point(51, 217)
+        Me.AnswerBox.Multiline = True
+        Me.AnswerBox.Name = "AnswerBox"
+        Me.AnswerBox.Size = New System.Drawing.Size(410, 93)
+        Me.AnswerBox.TabIndex = 9
+        '
+        'btn_Renew
+        '
+        Me.btn_Renew.Location = New System.Drawing.Point(192, 21)
+        Me.btn_Renew.Name = "btn_Renew"
+        Me.btn_Renew.Size = New System.Drawing.Size(126, 35)
+        Me.btn_Renew.TabIndex = 10
+        Me.btn_Renew.Text = "重置卡片"
+        Me.btn_Renew.UseVisualStyleBackColor = True
+        '
         'CardForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(539, 450)
+        Me.ClientSize = New System.Drawing.Size(519, 450)
+        Me.Controls.Add(Me.btn_Renew)
+        Me.Controls.Add(Me.AnswerBox)
         Me.Controls.Add(Me.btn_Delete)
         Me.Controls.Add(Me.btn_Reuse)
         Me.Controls.Add(Me.seqLabel)
@@ -145,4 +166,6 @@ Partial Class CardForm
     Friend WithEvents seqLabel As Label
     Friend WithEvents btn_Reuse As Button
     Friend WithEvents btn_Delete As Button
+    Friend WithEvents AnswerBox As TextBox
+    Friend WithEvents btn_Renew As Button
 End Class

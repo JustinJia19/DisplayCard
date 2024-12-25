@@ -28,11 +28,12 @@ Partial Class Form1
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.btnStart = New System.Windows.Forms.Button()
         Me.btn_OverviewHiddenCard = New System.Windows.Forms.Button()
+        Me.btn_Random = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'btnNext
         '
-        Me.btnNext.Location = New System.Drawing.Point(218, 307)
+        Me.btnNext.Location = New System.Drawing.Point(219, 305)
         Me.btnNext.Name = "btnNext"
         Me.btnNext.Size = New System.Drawing.Size(137, 45)
         Me.btnNext.TabIndex = 0
@@ -85,11 +86,21 @@ Partial Class Form1
         Me.btn_OverviewHiddenCard.Text = "查看已隐藏卡片"
         Me.btn_OverviewHiddenCard.UseVisualStyleBackColor = True
         '
+        'btn_Random
+        '
+        Me.btn_Random.Location = New System.Drawing.Point(64, 367)
+        Me.btn_Random.Name = "btn_Random"
+        Me.btn_Random.Size = New System.Drawing.Size(137, 43)
+        Me.btn_Random.TabIndex = 6
+        Me.btn_Random.Text = "随机抽取"
+        Me.btn_Random.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.btn_Random)
         Me.Controls.Add(Me.btn_OverviewHiddenCard)
         Me.Controls.Add(Me.btnStart)
         Me.Controls.Add(Me.lblStatus)
@@ -109,4 +120,5 @@ Partial Class Form1
     Friend WithEvents lblStatus As Label
     Friend WithEvents btnStart As Button
     Friend WithEvents btn_OverviewHiddenCard As Button
+    Friend WithEvents btn_Random As Button
 End Class
